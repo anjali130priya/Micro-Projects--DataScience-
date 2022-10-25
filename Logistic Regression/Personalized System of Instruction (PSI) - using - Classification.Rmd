@@ -1,0 +1,213 @@
+---
+title: "Personalized System of Instruction (PSI) - using - Classification"
+output: github_document
+---
+
+```{r}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+# 1.0 Importing Libraries
+
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(readxl)
+library(margins)
+library(ROCR)
+```
+
+# 2.0 Read data
+
+```{r}
+
+grade =read_excel("C:/personal files/data analytics/docs/MODULE 3/t1/Grade.xlsx")
+```
+
+# 3.0 Inspecting Data
+
+```{r}
+dim(grade)
+str(grade)
+
+
+summary(grade)
+boxplot(grade)
+```
+
+-   The dataset constitutes 5 columns and 32 rows.
+-   All the vaiables are in numeric format.
+-   OBS and TUCE has higher variance and medians as compared GPA . PSI , GRADE.
+
+## 3.1 Getting glimpse of data
+
+```{r}
+head(grade)
+tail(grade)
+```
+
+# 4.0 Modelling
+
+## 4.1 LPM
+
+```{r}
+LPM=lm(GRADE ~ OBS +GPA + TUCE + PSI , grade)
+summary(LPM)
+
+
+```
+
+-   As seen from linear probablity model the Rsq looses its significance in binary distribution of the predictors
+-   Let's run the logit model to overcome this issue
+
+## 4.2 Logistic Regression (Logit Function)
+
+```{r}
+logit_model =glm(GRADE ~ OBS + GPA + TUCE + PSI, data = grade , family  = binomial("logit"))
+summary(logit_model)
+```
+
+-   We can see that only GPA turns out to be significant having significance level .05.
+
+##### Calculating Margins
+
+```{r}
+margins(logit_model)
+```
+
+#### Proportions of dependent variable
+
+```{r}
+proportions(table(grade$GRADE))
+```
+
+-   The Distribution of grades is slightly skewed.
+
+##### Plotting Actual vs Fitted results
+
+```{r}
+
+
+plot(logit_model$fitted.values ,type = "l", ylim= c(0,1),col = "blue" , lwd = 2, lty = 1 , main  = "FITTED vs ACTUAL (Logit)", xlab = "Index" , ylab="Probablity")
+lines(grade$GRADE , type = "p" , col= "red" , pch =20)
+logit_model$fitted.values
+legend("center",c("Predicted" , "Actual") , fill = c("blue" , "red"))
+```
+
+-   Seeing the Line chart we can confirm that there are more proportion of Fail "0" than Pass "1" and hance there is slight bump in probability at index of 22 that is and constitutes about 30% of grades.
+
+## 4.2 Logistic Regression (probit)
+
+```{r}
+probit_model =glm(GRADE ~ OBS + GPA + TUCE + PSI, family = binomial("probit"), 
+    data = grade)
+
+summary(probit_model)
+```
+
+-   We can see that only GPA turns out to be significant having significance level .05.
+
+##### Calculating margins
+
+```{r}
+margins(probit_model)
+```
+
+### Plotting Actual vs Fitted results
+
+```{r}
+
+plot(probit_model$fitted.values ,type = "l", ylim= c(0,1),col = "green" , lwd = 4, lty = 1 , main  = "FITTED vs ACTUAL (Probit)", xlab = "Index" , ylab="Probablity")
+lines(grade$GRADE , type = "p" , col= "yellow" , pch =10)
+
+legend("center",c("Predicted" , "Actual") , fill = c("green" , "yellow"))
+
+
+```
+
+-   Seeing the Line chart we can confirm that there are more proportion of Fail "0" than Pass "1" and hance there is slight bump in probability at index of 22 that is and constitutes about 30% of grades.
+
+##### 4.3 Thresholding
+
+```{r}
+alpha= seq(0,1 , by=.1)
+
+acc_logit= c()
+acc_probit= c()
+acc_lpm=c()
+
+for (a1 in 1:length(alpha)){
+  logit.fitted=ifelse(logit_model$fitted.values >alpha[a1] ,1 ,0)
+  misclassifier1 = mean(logit.fitted != grade$GRADE)
+  acc_logit[a1]=1- misclassifier1
+}
+
+
+for (a1 in 1:length(alpha)){
+ 
+  probit.fitted=ifelse(probit_model$fitted.values >alpha[a1] ,1 ,0)
+  misclassifier2 = mean(probit.fitted != grade$GRADE)
+  acc_probit[a1]=1- misclassifier2
+}
+
+for (a1 in 1:length(alpha)){
+ 
+  lpm.fitted=ifelse(LPM$fitted.values >alpha[a1] ,1 ,0)
+  misclassifier3 = mean(lpm.fitted != grade$GRADE)
+  acc_lpm[a1]= 1-misclassifier3
+}
+
+
+
+
+
+x2=data.frame(threshold=alpha, logit_model.accuracy= acc_logit ,  probit_model.accuracy=acc_probit ,lpm_model.accuracy=acc_lpm)
+
+x2 %>% filter(logit_model.accuracy == max(x2$logit_model.accuracy))
+
+ggplot(x2 , aes(x=threshold ))+geom_line(aes(y=logit_model.accuracy), color = "red",lwd= 2)+ geom_line(aes(y=probit_model.accuracy), color= "blue",lwd= 2)+ geom_line(aes(y=lpm_model.accuracy), color = "green" , lwd= 2)+ labs(title= "Threshold vs Accuracy"  )+ xlab("Threshold")+ ylab("Accuracy")+theme_minimal()
+
+```
+
+-   The accuracy line for logit and probit is roughly similar while LPM model gives better accuracy only at few threshold values.
+-   Looking at overall accuracy, the logit and probit model has more accuratcy in most of the thresholds especially when threshold is in between than .1 to .5 with highest accuracy of .81% at threshold of 0.4 and 0.5 .
+
+##### 3.4 Receiver Operator Curve
+
+```{r}
+
+
+
+plot(performance(ROCR::prediction(logit_model$fitted.values, grade$GRADE), measure = "tpr", x= "fpr"), main="ROC Curve" , col="salmon" ,print.auc=TRUE, lwd= 3)
+
+plot(performance(ROCR::prediction(probit_model$fitted.values, grade$GRADE), measure = "tpr", x= "fpr") , add =TRUE , col ="goldenrod" ,print.auc=TRUE , lwd= 3)
+
+plot(performance(ROCR::prediction(LPM$fitted.values, grade$GRADE), measure = "tpr", x= "fpr"), add =TRUE , col = "lightsteelblue" ,print.auc=TRUE, lwd= 3)
+
+legend("bottom",
+       legend=c("LOGIT", "PROBIT", "LPM"),
+       col=c("salmon", "goldenrod", "lightsteelblue"),
+       lwd=4, cex =0.4, xpd = TRUE, horiz = TRUE)
+
+abline(0, 1, lwd=2, lty=1)
+
+
+
+## Area under curve
+auc1= performance(ROCR::prediction(logit_model$fitted.values, grade$GRADE), measure= "auc")
+auc2= performance(ROCR::prediction(probit_model$fitted.values, grade$GRADE), measure= "auc")
+auc3= performance(ROCR::prediction(LPM$fitted.values, grade$GRADE), measure= "auc")
+paste("auc for logit ,model" ,auc1@y.values[[1]])
+paste("auc for probit model" ,auc2@y.values[[1]])
+paste ("auc for lpm model" ,auc3@y.values[[1]])
+
+
+
+
+
+```
+
+-   Logit and Probit model shows same Roc curve with higher AUC than LPM . Hence we can say that Logit and Probit model are the better fit to the model.
