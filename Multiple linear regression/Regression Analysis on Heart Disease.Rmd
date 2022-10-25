@@ -1,0 +1,239 @@
+---
+title: "Regression Analysis on Heart Disease "
+author: "Anjali Priya"
+date: "2022-09-14"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+
+
+
+```{r}
+setwd("C:/personal files/data analytics/docs/MODULE 3/T3")
+getwd()
+```
+loading library
+```{r}
+library(ggplot2)
+library(tidyr)
+library(readxl)
+library(readr)
+library(car)
+library(tidyverse)
+library(corrplot)
+library(broom)
+```
+
+
+## BRIEF
+The dataset “heart.data” contains observations on the percentage of people cycling to work each 
+day, the percentage of people smoking, and the percentage of people with heart diseases in a 
+hypothetical sample of 498 towns. The rates of cycling to work range between 1 and 75%, rates of 
+smoking between 0.5 and 30%, and rates of heart disease between 0.5% and 20.5%. The Surveyor
+want to check the relationship between cycling to work and heart diseases using above data
+
+>Q1. Read, call and view the data in r
+
+```{r}
+
+cardiodata_1 = read_excel("C:/personal files/data analytics/docs/MODULE 3/T3/heart.data.xlsx")
+View(cardiodata_1)
+```
+
+>Q2. check the dimension and characteristics of the dataset.
+
+```{r}
+dim(cardiodata_1)
+class(cardiodata_1)
+```
+- *As seen from the given dataset are in tibble, dataframe class .*
+- *Dimension of data set is [498 x 3] .*
+
+>Q3. check properties of the variables.
+
+```{r}
+str(cardiodata_1)
+```
+- *As seen from the given data all the variables are in numeric form.*
+
+>Q4. Check the first and last few observations from the dataset
+
+```{r}
+head(cardiodata_1 , 10)
+tail(cardiodata_1, 10)
+```
+>Q5. Create the summary
+
+```{r}
+summary(cardiodata_1)
+cardiodata_1 %>%
+  boxplot( main = "Boxplot of percentage distribution " , ylab="percent")
+ 
+
+
+lapply(cardiodata_1, boxplot.stats)
+## standarizing data 
+cardiodata=as.data.frame( scale(cardiodata_1))
+cardiodata %>%
+  boxplot( main = "Boxplot of percentage distribution " , ylab="percent")
+
+```
+
+- *data under each category is normally distributed around median *
+- *data under cycling category has largest spread and higher median for 498 towns *
+
+
+>Q6. Check normality of dependent variable and linearity between variables
+
+```{r}
+qqPlot(cardiodata$heart_diseases)
+correlationmatrix = cor(cardiodata)
+corrplot(cor(correlationmatrix),method ="number")
+
+
+plot(cardiodata)
+
+
+```
+
+- Seeing the qqplot we can say that the data are approximately normally distributed
+- There is high correlation negative correlation between cycling-heart disease , weak positive correlation between smoking and heart disease and no correlation between cycling and smoking*
+- *No outliers in dataset
+
+
+>Q7. To check if there is a linear relationship between “cycling to work”, “smoking”, and “heart 
+disease” in our hypothetical survey of 498 towns. Create and run a regression model using 
+“heart.data” dataset and also create summary of the regression model
+
+```{r}
+model_1=lm(heart_diseases~ cycling + smoking ,cardiodata )
+summary(model_1)
+model_2=lm(heart_diseases ~ cycling , cardiodata)
+summary(model_2)
+
+```
+- As seen from the summary stats of linear regression its evident that including cycling and smoking both give the better fit model by looking at the Adjusted R sqrd value which is 97.6% and all the parameters are highly significant.
+
+>Q8. Store the output of the regression model and print coefficients.
+
+```{r}
+model_1
+coff_m1=model_1$coefficients
+```
+
+>Q9. Print the Estimate, Std. Error, t-value, and p-value for the independent variables (i.e., cycling 
+and smoking)
+
+```{r}
+
+summary(model_1)$coefficients 
+```
+
+>Q10. Print residual standard error, r-squared, adjusted r-squared, f-statistic, p-value from the output
+
+```{r}
+
+
+RSE = summary(model_1)$sigma
+R_sqrd=summary(model_1)$r.squared
+AdjR_sqrd=summary(model_1)$adj.r.squared
+F_value=summary(model_1)$fstatistic
+
+
+```
+>Q11. Compute the confidence intervals
+
+```{r}
+conf_interval=predict(model_1 , cardiodata , interval ="confidence")
+head(conf_interval,10)
+
+```
+
+>Q12. Create the diagnostic plots and discuss them in brief.
+
+```{r}
+
+plot(model_1)
+heart_fitted=augment(model_1)$.fitted
+
+
+
+```
+
+- Residual vs Fitted value has uniform spread and the red lines is deviates a little at ends but overall its more or less is  perfect straight across plot .Hence we can declare that the residual follow linear pattern.
+
+- We can see that in QQplot the points fall roughly along the straight line , Hence points are normally distributed
+
+- Residual vs Fitted value has uniform spread and the red lines is almost straight across plot .Hence we can declare that the assumption of equal variance in not violated hence the model ids homoscedastic.
+
+- In Residual vs Leverage we can see that observation 196 i s on cooks line but doesnot cross it .This means there is no potential influencers.
+
+> Q13. Check autocorrelation and heteroscedasticity using appropriate statistical test.
+
+- **Test for Autocorrelation with the ACF Plot**
+```{r}
+
+residuals_mod1 =model_1$residuals
+acf(residuals_mod1 , type ="correlation")
+
+```
+
+*After the lag-0 correlation, the subsequent correlations drop quickly to zero and stay (mostly) between the limits of the significance level (dashed blue lines). Therefore, we can conclude that the residuals of this model meet the assumption of no autocorrelation.*
+
+- **Durbin-Watson Test to Check Autocorrelation**
+    + H0 : First order autocorrelation do not exist
+    + H1 : First order autocorrelation exist
+
+```{r}
+ 
+
+#Durbin-Watson Test to Check Autocorrelation
+
+library(lmtest)
+lmtest::dwtest(model_1)
+
+```
+- *As the DW value is 1.91 which lies in the range of 1.5 to 2.5 hence there is no autocorrelation between the residuals* 
+
+**Testing Heteroskedacity**
+
+- **Perform the Breusch–Pagan Test to Check Heteroscedasticity**
+    + H0 : Residuals are distributed with equal variance(i.e homoscedastic)
+    + H1 : Residuals are distributes with non equal variance(i.e heteroscedastic)
+
+```{r}
+lmtest::bgtest(model_1)
+
+```
+- *p value is greater than .05 hence we fail to reject the null confirming that model is homoscedastic* 
+
+```{r}
+
+plot(cardiodata$heart_diseases ,heart_fitted , xlab= "Predicted Heart disease" , ylab="Actual Heart disease")
+
+## unscaling data for accuracy check and rmse of model
+targetmean = mean(cardiodata_1$heart_diseases)
+targetsd = sd(cardiodata_1$heart_diseases)
+unscaledtest.obs = round(cardiodata$heart_diseases *targetsd + targetmean , 0)
+unscaledtest.pred = round (heart_fitted *targetsd + targetmean , 0)
+#####
+
+
+Accuracy=mean(unscaledtest.obs ==unscaledtest.pred )
+Accuracy
+
+rmse= sqrt(mean((unscaledtest.obs-unscaledtest.pred)^2))
+rmse
+
+
+```
