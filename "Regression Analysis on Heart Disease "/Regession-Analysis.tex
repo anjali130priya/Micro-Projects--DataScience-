@@ -1,0 +1,819 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Regression Analysis on Heart Disease},
+  pdfauthor={Anjali Priya},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Regression Analysis on Heart Disease}
+\author{Anjali Priya}
+\date{2022-09-14}
+
+\begin{document}
+\maketitle
+
+\hypertarget{r-markdown}{%
+\subsection{R Markdown}\label{r-markdown}}
+
+This is an R Markdown document. Markdown is a simple formatting syntax
+for authoring HTML, PDF, and MS Word documents. For more details on
+using R Markdown see \url{http://rmarkdown.rstudio.com}.
+
+When you click the \textbf{Knit} button a document will be generated
+that includes both content as well as the output of any embedded R code
+chunks within the document. You can embed an R code chunk like this:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{setwd}\NormalTok{(}\StringTok{"C:/personal files/data analytics/docs/MODULE 3/T3"}\NormalTok{)}
+\FunctionTok{getwd}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "C:/personal files/data analytics/docs/MODULE 3/T3"
+\end{verbatim}
+
+loading library
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(ggplot2)}
+\FunctionTok{library}\NormalTok{(tidyr)}
+\FunctionTok{library}\NormalTok{(readxl)}
+\FunctionTok{library}\NormalTok{(readr)}
+\FunctionTok{library}\NormalTok{(car)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: carData
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --
+\end{verbatim}
+
+\begin{verbatim}
+## v tibble  3.1.6      v stringr 1.4.0 
+## v purrr   0.3.4      v forcats 0.5.1 
+## v dplyr   1.0.10
+\end{verbatim}
+
+\begin{verbatim}
+## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+## x dplyr::recode() masks car::recode()
+## x purrr::some()   masks car::some()
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(corrplot)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## corrplot 0.92 loaded
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(broom)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{brief}{%
+\subsection{BRIEF}\label{brief}}
+
+The dataset ``heart.data'' contains observations on the percentage of
+people cycling to work each day, the percentage of people smoking, and
+the percentage of people with heart diseases in a hypothetical sample of
+498 towns. The rates of cycling to work range between 1 and 75\%, rates
+of smoking between 0.5 and 30\%, and rates of heart disease between
+0.5\% and 20.5\%. The Surveyor want to check the relationship between
+cycling to work and heart diseases using above data
+
+\begin{quote}
+Q1. Read, call and view the data in r
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cardiodata\_1 }\OtherTok{=} \FunctionTok{read\_excel}\NormalTok{(}\StringTok{"C:/personal files/data analytics/docs/MODULE 3/T3/heart.data.xlsx"}\NormalTok{)}
+\FunctionTok{View}\NormalTok{(cardiodata\_1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{quote}
+Q2. check the dimension and characteristics of the dataset.
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{dim}\NormalTok{(cardiodata\_1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 498   3
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{class}\NormalTok{(cardiodata\_1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "tbl_df"     "tbl"        "data.frame"
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{As seen from the given dataset are in tibble, dataframe class .}
+\item
+  \emph{Dimension of data set is {[}498 x 3{]} .}
+\end{itemize}
+
+\begin{quote}
+Q3. check properties of the variables.
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{str}\NormalTok{(cardiodata\_1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## tibble [498 x 3] (S3: tbl_df/tbl/data.frame)
+##  $ cycling       : num [1:498] 30.8 65.13 1.96 44.8 69.43 ...
+##  $ smoking       : num [1:498] 10.9 2.22 17.59 2.8 15.97 ...
+##  $ heart_diseases: num [1:498] 11.77 2.85 17.18 6.82 4.06 ...
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{As seen from the given data all the variables are in numeric
+  form.}
+\end{itemize}
+
+\begin{quote}
+Q4. Check the first and last few observations from the dataset
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{head}\NormalTok{(cardiodata\_1 , }\DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 10 x 3
+##    cycling smoking heart_diseases
+##      <dbl>   <dbl>          <dbl>
+##  1   30.8    10.9           11.8 
+##  2   65.1     2.22           2.85
+##  3    1.96   17.6           17.2 
+##  4   44.8     2.80           6.82
+##  5   69.4    16.0            4.06
+##  6   54.4    29.3            9.55
+##  7   49.1     9.06           7.62
+##  8    4.78   12.8           15.9 
+##  9   65.7    12.0            3.07
+## 10   35.3    23.3           12.1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tail}\NormalTok{(cardiodata\_1, }\DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 10 x 3
+##    cycling smoking heart_diseases
+##      <dbl>   <dbl>          <dbl>
+##  1   41.6    0.533           5.93
+##  2   70.2   16.3             4.71
+##  3   50.8    6.03            5.59
+##  4   68.9   10.5             3.11
+##  5   21.6    7.60           12.4 
+##  6   47.7   27.6            11.3 
+##  7   45.1   21.4             9.62
+##  8    8.28   6.42           13.5 
+##  9   42.3   20.7            10.1 
+## 10   30.8   23.6            11.8
+\end{verbatim}
+
+\begin{quote}
+Q5. Create the summary
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(cardiodata\_1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     cycling          smoking        heart_diseases   
+##  Min.   : 1.119   Min.   : 0.5259   Min.   : 0.5519  
+##  1st Qu.:20.205   1st Qu.: 8.2798   1st Qu.: 6.5137  
+##  Median :35.824   Median :15.8146   Median :10.3853  
+##  Mean   :37.788   Mean   :15.4350   Mean   :10.1745  
+##  3rd Qu.:57.853   3rd Qu.:22.5689   3rd Qu.:13.7240  
+##  Max.   :74.907   Max.   :29.9467   Max.   :20.4535
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cardiodata\_1 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{boxplot}\NormalTok{( }\AttributeTok{main =} \StringTok{"Boxplot of percentage distribution "}\NormalTok{ , }\AttributeTok{ylab=}\StringTok{"percent"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Regession-Analysis_files/figure-latex/unnamed-chunk-7-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{lapply}\NormalTok{(cardiodata\_1, boxplot.stats)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $cycling
+## $cycling$stats
+## [1]  1.119154 20.197206 35.824459 57.978406 74.907111
+## 
+## $cycling$n
+## [1] 498
+## 
+## $cycling$conf
+## [1] 33.14949 38.49942
+## 
+## $cycling$out
+## numeric(0)
+## 
+## 
+## $smoking
+## $smoking$stats
+## [1]  0.525850  8.278009 15.814614 22.585020 29.946743
+## 
+## $smoking$n
+## [1] 498
+## 
+## $smoking$conf
+## [1] 14.80166 16.82757
+## 
+## $smoking$out
+## numeric(0)
+## 
+## 
+## $heart_diseases
+## $heart_diseases$stats
+## [1]  0.5518982  6.5126756 10.3852547 13.7241183 20.4534962
+## 
+## $heart_diseases$n
+## [1] 498
+## 
+## $heart_diseases$conf
+## [1]  9.874674 10.895836
+## 
+## $heart_diseases$out
+## numeric(0)
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\# standarizing data }
+\NormalTok{cardiodata}\OtherTok{=}\FunctionTok{as.data.frame}\NormalTok{( }\FunctionTok{scale}\NormalTok{(cardiodata\_1))}
+\NormalTok{cardiodata }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{boxplot}\NormalTok{( }\AttributeTok{main =} \StringTok{"Boxplot of percentage distribution "}\NormalTok{ , }\AttributeTok{ylab=}\StringTok{"percent"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Regession-Analysis_files/figure-latex/unnamed-chunk-7-2.pdf}
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{data under each category is normally distributed around median}
+\item
+  \emph{data under cycling category has largest spread and higher median
+  for 498 towns}
+\end{itemize}
+
+\begin{quote}
+Q6. Check normality of dependent variable and linearity between
+variables
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{qqPlot}\NormalTok{(cardiodata}\SpecialCharTok{$}\NormalTok{heart\_diseases)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Regession-Analysis_files/figure-latex/unnamed-chunk-8-1.pdf}
+
+\begin{verbatim}
+## [1] 215 284
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{correlationmatrix }\OtherTok{=} \FunctionTok{cor}\NormalTok{(cardiodata)}
+\FunctionTok{corrplot}\NormalTok{(}\FunctionTok{cor}\NormalTok{(correlationmatrix),}\AttributeTok{method =}\StringTok{"number"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Regession-Analysis_files/figure-latex/unnamed-chunk-8-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(cardiodata)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Regession-Analysis_files/figure-latex/unnamed-chunk-8-3.pdf}
+
+\begin{itemize}
+\tightlist
+\item
+  Seeing the qqplot we can say that the data are approximately normally
+  distributed
+\item
+  There is high correlation negative correlation between cycling-heart
+  disease , weak positive correlation between smoking and heart disease
+  and no correlation between cycling and smoking*
+\item
+  *No outliers in dataset
+\end{itemize}
+
+\begin{quote}
+Q7. To check if there is a linear relationship between ``cycling to
+work'', ``smoking'', and ``heart disease'' in our hypothetical survey of
+498 towns. Create and run a regression model using ``heart.data''
+dataset and also create summary of the regression model
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model\_1}\OtherTok{=}\FunctionTok{lm}\NormalTok{(heart\_diseases}\SpecialCharTok{\textasciitilde{}}\NormalTok{ cycling }\SpecialCharTok{+}\NormalTok{ smoking ,cardiodata )}
+\FunctionTok{summary}\NormalTok{(model\_1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = heart_diseases ~ cycling + smoking, data = cardiodata)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.47658 -0.09762  0.00792  0.09671  0.42283 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) -6.119e-17  6.410e-03    0.00        1    
+## cycling     -9.403e-01  6.418e-03 -146.53   <2e-16 ***
+## smoking      3.234e-01  6.418e-03   50.39   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.1431 on 495 degrees of freedom
+## Multiple R-squared:  0.9796, Adjusted R-squared:  0.9795 
+## F-statistic: 1.19e+04 on 2 and 495 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model\_2}\OtherTok{=}\FunctionTok{lm}\NormalTok{(heart\_diseases }\SpecialCharTok{\textasciitilde{}}\NormalTok{ cycling , cardiodata)}
+\FunctionTok{summary}\NormalTok{(model\_2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = heart_diseases ~ cycling, data = cardiodata)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.88111 -0.26369 -0.00088  0.25179  0.79674 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) -5.015e-17  1.585e-02    0.00        1    
+## cycling     -9.355e-01  1.587e-02  -58.94   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.3538 on 496 degrees of freedom
+## Multiple R-squared:  0.8751, Adjusted R-squared:  0.8748 
+## F-statistic:  3474 on 1 and 496 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  As seen from the summary stats of linear regression its evident that
+  including cycling and smoking both give the better fit model by
+  looking at the Adjusted R sqrd value which is 97.6\% and all the
+  parameters are highly significant.
+\end{itemize}
+
+\begin{quote}
+Q8. Store the output of the regression model and print coefficients.
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model\_1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = heart_diseases ~ cycling + smoking, data = cardiodata)
+## 
+## Coefficients:
+## (Intercept)      cycling      smoking  
+##  -6.119e-17   -9.403e-01    3.234e-01
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{coff\_m1}\OtherTok{=}\NormalTok{model\_1}\SpecialCharTok{$}\NormalTok{coefficients}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{quote}
+Q9. Print the Estimate, Std. Error, t-value, and p-value for the
+independent variables (i.e., cycling and smoking)
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(model\_1)}\SpecialCharTok{$}\NormalTok{coefficients }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                  Estimate  Std. Error       t value      Pr(>|t|)
+## (Intercept) -6.119484e-17 0.006410474 -9.546071e-15  1.000000e+00
+## cycling     -9.403500e-01 0.006417655 -1.465255e+02  0.000000e+00
+## smoking      3.233643e-01 0.006417655  5.038667e+01 5.192235e-197
+\end{verbatim}
+
+\begin{quote}
+Q10. Print residual standard error, r-squared, adjusted r-squared,
+f-statistic, p-value from the output
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{RSE }\OtherTok{=} \FunctionTok{summary}\NormalTok{(model\_1)}\SpecialCharTok{$}\NormalTok{sigma}
+\NormalTok{R\_sqrd}\OtherTok{=}\FunctionTok{summary}\NormalTok{(model\_1)}\SpecialCharTok{$}\NormalTok{r.squared}
+\NormalTok{AdjR\_sqrd}\OtherTok{=}\FunctionTok{summary}\NormalTok{(model\_1)}\SpecialCharTok{$}\NormalTok{adj.r.squared}
+\NormalTok{F\_value}\OtherTok{=}\FunctionTok{summary}\NormalTok{(model\_1)}\SpecialCharTok{$}\NormalTok{fstatistic}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{quote}
+Q11. Compute the confidence intervals
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{conf\_interval}\OtherTok{=}\FunctionTok{predict}\NormalTok{(model\_1 , cardiodata , }\AttributeTok{interval =}\StringTok{"confidence"}\NormalTok{)}
+\FunctionTok{head}\NormalTok{(conf\_interval,}\DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##           fit        lwr        upr
+## 1   0.1288328  0.1139247  0.1437409
+## 2  -1.7123317 -1.7411415 -1.6835219
+## 3   1.6523906  1.6276168  1.6771644
+## 4  -0.7996914 -0.8230828 -0.7763000
+## 5  -1.3639947 -1.3864395 -1.3415499
+## 6  -0.1852071 -0.2115583 -0.1588559
+## 7  -0.7418803 -0.7591522 -0.7246083
+## 8   1.3433182  1.3199248  1.3667116
+## 9  -1.3575020 -1.3788956 -1.3361084
+## 10  0.4167086  0.3992823  0.4341350
+\end{verbatim}
+
+\begin{quote}
+Q12. Create the diagnostic plots and discuss them in brief.
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(model\_1)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Regession-Analysis_files/figure-latex/unnamed-chunk-14-1.pdf}
+\includegraphics{Regession-Analysis_files/figure-latex/unnamed-chunk-14-2.pdf}
+\includegraphics{Regession-Analysis_files/figure-latex/unnamed-chunk-14-3.pdf}
+\includegraphics{Regession-Analysis_files/figure-latex/unnamed-chunk-14-4.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{heart\_fitted}\OtherTok{=}\FunctionTok{augment}\NormalTok{(model\_1)}\SpecialCharTok{$}\NormalTok{.fitted}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\item
+  Residual vs Fitted value has uniform spread and the red lines is
+  deviates a little at ends but overall its more or less is perfect
+  straight across plot .Hence we can declare that the residual follow
+  linear pattern.
+\item
+  We can see that in QQplot the points fall roughly along the straight
+  line , Hence points are normally distributed
+\item
+  Residual vs Fitted value has uniform spread and the red lines is
+  almost straight across plot .Hence we can declare that the assumption
+  of equal variance in not violated hence the model ids homoscedastic.
+\item
+  In Residual vs Leverage we can see that observation 196 i s on cooks
+  line but doesnot cross it .This means there is no potential
+  influencers.
+\end{itemize}
+
+\begin{quote}
+Q13. Check autocorrelation and heteroscedasticity using appropriate
+statistical test.
+\end{quote}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Test for Autocorrelation with the ACF Plot}
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{residuals\_mod1 }\OtherTok{=}\NormalTok{model\_1}\SpecialCharTok{$}\NormalTok{residuals}
+\FunctionTok{acf}\NormalTok{(residuals\_mod1 , }\AttributeTok{type =}\StringTok{"correlation"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Regession-Analysis_files/figure-latex/unnamed-chunk-15-1.pdf}
+
+\emph{After the lag-0 correlation, the subsequent correlations drop
+quickly to zero and stay (mostly) between the limits of the significance
+level (dashed blue lines). Therefore, we can conclude that the residuals
+of this model meet the assumption of no autocorrelation.}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Durbin-Watson Test to Check Autocorrelation}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    H0 : First order autocorrelation do not exist
+  \item
+    H1 : First order autocorrelation exist
+  \end{itemize}
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#Durbin{-}Watson Test to Check Autocorrelation}
+
+\FunctionTok{library}\NormalTok{(lmtest)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: zoo
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'zoo'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:base':
+## 
+##     as.Date, as.Date.numeric
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lmtest}\SpecialCharTok{::}\FunctionTok{dwtest}\NormalTok{(model\_1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Durbin-Watson test
+## 
+## data:  model_1
+## DW = 1.9174, p-value = 0.1773
+## alternative hypothesis: true autocorrelation is greater than 0
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{As the DW value is 1.91 which lies in the range of 1.5 to 2.5
+  hence there is no autocorrelation between the residuals}
+\end{itemize}
+
+\textbf{Testing Heteroskedacity}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Perform the Breusch--Pagan Test to Check Heteroscedasticity}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    H0 : Residuals are distributed with equal variance(i.e
+    homoscedastic)
+  \item
+    H1 : Residuals are distributes with non equal variance(i.e
+    heteroscedastic)
+  \end{itemize}
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lmtest}\SpecialCharTok{::}\FunctionTok{bgtest}\NormalTok{(model\_1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Breusch-Godfrey test for serial correlation of order up to 1
+## 
+## data:  model_1
+## LM test = 0.63776, df = 1, p-value = 0.4245
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{p value is greater than .05 hence we fail to reject the null
+  confirming that model is homoscedastic}
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(cardiodata}\SpecialCharTok{$}\NormalTok{heart\_diseases ,heart\_fitted , }\AttributeTok{xlab=} \StringTok{"Predicted Heart disease"}\NormalTok{ , }\AttributeTok{ylab=}\StringTok{"Actual Heart disease"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Regession-Analysis_files/figure-latex/unnamed-chunk-18-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\# unscaling data for accuracy check and rmse of model}
+\NormalTok{targetmean }\OtherTok{=} \FunctionTok{mean}\NormalTok{(cardiodata\_1}\SpecialCharTok{$}\NormalTok{heart\_diseases)}
+\NormalTok{targetsd }\OtherTok{=} \FunctionTok{sd}\NormalTok{(cardiodata\_1}\SpecialCharTok{$}\NormalTok{heart\_diseases)}
+\NormalTok{unscaledtest.obs }\OtherTok{=} \FunctionTok{round}\NormalTok{(cardiodata}\SpecialCharTok{$}\NormalTok{heart\_diseases }\SpecialCharTok{*}\NormalTok{targetsd }\SpecialCharTok{+}\NormalTok{ targetmean , }\DecValTok{0}\NormalTok{)}
+\NormalTok{unscaledtest.pred }\OtherTok{=} \FunctionTok{round}\NormalTok{ (heart\_fitted }\SpecialCharTok{*}\NormalTok{targetsd }\SpecialCharTok{+}\NormalTok{ targetmean , }\DecValTok{0}\NormalTok{)}
+\DocumentationTok{\#\#\#\#\#}
+
+
+\NormalTok{Accuracy}\OtherTok{=}\FunctionTok{mean}\NormalTok{(unscaledtest.obs }\SpecialCharTok{==}\NormalTok{unscaledtest.pred )}
+\NormalTok{Accuracy}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.4959839
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rmse}\OtherTok{=} \FunctionTok{sqrt}\NormalTok{(}\FunctionTok{mean}\NormalTok{((unscaledtest.obs}\SpecialCharTok{{-}}\NormalTok{unscaledtest.pred)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{))}
+\NormalTok{rmse}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.8127992
+\end{verbatim}
+
+\end{document}
