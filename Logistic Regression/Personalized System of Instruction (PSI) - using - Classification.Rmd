@@ -174,7 +174,7 @@ ggplot(x2 , aes(x=threshold ))+geom_line(aes(y=logit_model.accuracy), color = "r
 -   The accuracy line for logit and probit is roughly similar while LPM model gives better accuracy only at few threshold values.
 -   Looking at overall accuracy, the logit and probit model has more accuratcy in most of the thresholds especially when threshold is in between than .1 to .5 with highest accuracy of .81% at threshold of 0.4 and 0.5 .
 
-##### 3.4 Receiver Operator Curve
+##### 3.4 Receiver Operator Curve-
 
 ```{r}
 
