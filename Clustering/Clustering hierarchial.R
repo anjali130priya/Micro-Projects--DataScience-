@@ -1,14 +1,14 @@
 
 # Load the data
-heart_disease <- read.csv("C:/personal files/data analytics/docs/datacamp project/kmeans/heart_disease_patients.csv")
+heart_disease <- read.csv("C:/personal files/data analytics/docs/micro git proj/Micro-Projects--DataScience-Multiple linear regression/Clustering/heart_disease_patients.csv")
 
-# Print the first ten rows
+# Print the first ten rows.
 # .... YOUR CODE FOR TASK 1 ....
 head (heart_disease , 10)
 
 
 
-soln_heart_disease <- read.csv("C:/personal files/data analytics/docs/datacamp project/kmeans/heart_disease_patients.csv")
+soln_heart_disease <- read.csv("C:/personal files/data analytics/docs/micro git proj/Micro-Projects--DataScience-Multiple linear regression/Clustering/heart_disease_patients.csv")
 
 
 
@@ -167,7 +167,7 @@ soln_clust_summary <- do.call(data.frame, aggregate(. ~hc_clust, data = soln_hd_
 
 
 
-# Plot age and cholf
+# Plot age and chol
 # .... YOUR CODE FOR TASK 9 ....
 plot_one=ggplot(hd_simple , aes ( age , chol , color = as.factor(hc_clust)))+
   geom_point()
@@ -187,7 +187,7 @@ soln_plot_two <- ggplot(soln_heart_disease, aes(x=oldpeak, y=trestbps,
 
 
 
-# Add TRUE if the algorithm shows promise, add FALSE if it does not
+# Add TRUE if the algorithm shows promise, add FALSE if it does not.
 explore_kmeans <- FALSE
 explore_hierarch_complete <- TRUE
 explore_hierarch_single <- FALSE
@@ -195,6 +195,7 @@ explore_hierarch_single <- FALSE
 soln_1 <- FALSE
 soln_2 <- TRUE
 soln_3 <- FALSE
+
 
 
 
