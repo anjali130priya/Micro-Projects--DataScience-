@@ -167,7 +167,7 @@ soln_clust_summary <- do.call(data.frame, aggregate(. ~hc_clust, data = soln_hd_
 
 
 
-# Plot age and chol
+# Plot age and cholf
 # .... YOUR CODE FOR TASK 9 ....
 plot_one=ggplot(hd_simple , aes ( age , chol , color = as.factor(hc_clust)))+
   geom_point()
