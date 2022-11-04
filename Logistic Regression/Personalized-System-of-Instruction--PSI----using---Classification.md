@@ -5,8 +5,6 @@ Personalized System of Instruction (PSI) - using - Classification
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# 1.0 Importing Libraries
-
 ``` r
 library(dplyr)
 ```
@@ -126,31 +124,30 @@ tail(grade)
 ## 4.1 LPM
 
 ``` r
-LPM=lm(GRADE ~ OBS +GPA + TUCE + PSI , grade)
+LPM=lm(GRADE ~ GPA + TUCE + PSI , grade)
 summary(LPM)
 ```
 
     ## 
     ## Call:
-    ## lm(formula = GRADE ~ OBS + GPA + TUCE + PSI, data = grade)
+    ## lm(formula = GRADE ~ GPA + TUCE + PSI, data = grade)
     ## 
     ## Residuals:
-    ##     Min      1Q  Median      3Q     Max 
-    ## -0.7668 -0.2436 -0.0134  0.1922  0.7593 
+    ##      Min       1Q   Median       3Q      Max 
+    ## -0.78153 -0.27731  0.00531  0.21089  0.81145 
     ## 
     ## Coefficients:
-    ##              Estimate Std. Error t value Pr(>|t|)   
-    ## (Intercept) -1.546367   0.539690  -2.865  0.00797 **
-    ## OBS          0.007440   0.014818   0.502  0.61969   
-    ## GPA          0.462728   0.164179   2.818  0.00892 **
-    ## TUCE         0.009621   0.019825   0.485  0.63138   
-    ## PSI          0.260326   0.274507   0.948  0.35137   
+    ##             Estimate Std. Error t value Pr(>|t|)   
+    ## (Intercept) -1.49802    0.52389  -2.859  0.00793 **
+    ## GPA          0.46385    0.16196   2.864  0.00784 **
+    ## TUCE         0.01050    0.01948   0.539  0.59436   
+    ## PSI          0.37855    0.13917   2.720  0.01109 * 
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## Residual standard error: 0.3933 on 27 degrees of freedom
-    ## Multiple R-squared:  0.4213, Adjusted R-squared:  0.3356 
-    ## F-statistic: 4.914 on 4 and 27 DF,  p-value: 0.004153
+    ## Residual standard error: 0.3881 on 28 degrees of freedom
+    ## Multiple R-squared:  0.4159, Adjusted R-squared:  0.3533 
+    ## F-statistic: 6.646 on 3 and 28 DF,  p-value: 0.001571
 
 -   As seen from linear probablity model the Rsq looses its significance
     in binary distribution of the predictors
@@ -159,38 +156,37 @@ summary(LPM)
 ## 4.2 Logistic Regression (Logit Function)
 
 ``` r
-logit_model =glm(GRADE ~ OBS + GPA + TUCE + PSI, data = grade , family  = binomial("logit"))
+logit_model =glm(GRADE ~ GPA + TUCE + PSI, data = grade , family  = binomial("logit"))
 summary(logit_model)
 ```
 
     ## 
     ## Call:
-    ## glm(formula = GRADE ~ OBS + GPA + TUCE + PSI, family = binomial("logit"), 
+    ## glm(formula = GRADE ~ GPA + TUCE + PSI, family = binomial("logit"), 
     ##     data = grade)
     ## 
     ## Deviance Residuals: 
     ##     Min       1Q   Median       3Q      Max  
-    ## -1.9292  -0.5022  -0.2160   0.5210   1.8631  
+    ## -1.9551  -0.6453  -0.2570   0.5888   2.0966  
     ## 
     ## Coefficients:
-    ##              Estimate Std. Error z value Pr(>|z|)  
-    ## (Intercept) -14.67183    5.72740  -2.562   0.0104 *
-    ## OBS           0.09941    0.12340   0.806   0.4205  
-    ## GPA           3.01151    1.35162   2.228   0.0259 *
-    ## TUCE          0.09369    0.14622   0.641   0.5217  
-    ## PSI           0.97157    1.96386   0.495   0.6208  
+    ##              Estimate Std. Error z value Pr(>|z|)   
+    ## (Intercept) -13.02135    4.93127  -2.641  0.00828 **
+    ## GPA           2.82611    1.26293   2.238  0.02524 * 
+    ## TUCE          0.09516    0.14155   0.672  0.50143   
+    ## PSI           2.37869    1.06456   2.234  0.02545 * 
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
     ## (Dispersion parameter for binomial family taken to be 1)
     ## 
     ##     Null deviance: 41.183  on 31  degrees of freedom
-    ## Residual deviance: 25.091  on 27  degrees of freedom
-    ## AIC: 35.091
+    ## Residual deviance: 25.779  on 28  degrees of freedom
+    ## AIC: 33.779
     ## 
     ## Number of Fisher Scoring iterations: 5
 
--   We can see that only GPA turns out to be significant having
+-   We can see that only GPA and PSI turns out to be significant having
     significance level .05.
 
 ##### Calculating Margins
@@ -201,10 +197,10 @@ margins(logit_model)
 
     ## Average marginal effects
 
-    ## glm(formula = GRADE ~ OBS + GPA + TUCE + PSI, family = binomial("logit"),     data = grade)
+    ## glm(formula = GRADE ~ GPA + TUCE + PSI, family = binomial("logit"),     data = grade)
 
-    ##      OBS    GPA    TUCE    PSI
-    ##  0.01251 0.3789 0.01179 0.1222
+    ##     GPA    TUCE    PSI
+    ##  0.3626 0.01221 0.3052
 
 #### Proportions of dependent variable
 
@@ -226,18 +222,16 @@ lines(grade$GRADE , type = "p" , col= "red" , pch =20)
 logit_model$fitted.values
 ```
 
-    ##           1           2           3           4           5           6 
-    ## 0.009120848 0.023925381 0.095580256 0.012662861 0.459762187 0.020436764 
-    ##           7           8           9          10          11          12 
-    ## 0.016765622 0.036753056 0.090291209 0.699374290 0.022219292 0.209836546 
-    ##          13          14          15          16          17          18 
-    ## 0.383757666 0.245934790 0.471478270 0.045229441 0.086426767 0.070444781 
-    ##          19          20          21          22          23          24 
-    ## 0.435164101 0.536542771 0.033964348 0.882010056 0.197967945 0.844456720 
-    ##          25          26          27          28          29          30 
-    ## 0.844767950 0.484116316 0.686842517 0.348042332 0.894914946 0.970193533 
-    ##          31          32 
-    ## 0.664728846 0.176287616
+    ##          1          2          3          4          5          6          7 
+    ## 0.02657799 0.05950126 0.18725993 0.02590164 0.56989295 0.03485827 0.02650406 
+    ##          8          9         10         11         12         13         14 
+    ## 0.05155900 0.11112666 0.69351131 0.02447037 0.18999744 0.32223955 0.19321116 
+    ##         15         16         17         18         19         20         21 
+    ## 0.36098992 0.03018375 0.05362641 0.03858834 0.58987249 0.66078584 0.06137585 
+    ##         22         23         24         25         26         27         28 
+    ## 0.90484727 0.24177245 0.85209089 0.83829051 0.48113304 0.63542059 0.30721866 
+    ##         29         30         31         32 
+    ## 0.84170413 0.94534025 0.52911720 0.11103084
 
 ``` r
 legend("center",c("Predicted" , "Actual") , fill = c("blue" , "red"))
@@ -253,7 +247,7 @@ legend("center",c("Predicted" , "Actual") , fill = c("blue" , "red"))
 ## 4.2 Logistic Regression (probit)
 
 ``` r
-probit_model =glm(GRADE ~ OBS + GPA + TUCE + PSI, family = binomial("probit"), 
+probit_model =glm(GRADE ~  GPA + TUCE + PSI, family = binomial("probit"), 
     data = grade)
 
 summary(probit_model)
@@ -261,30 +255,29 @@ summary(probit_model)
 
     ## 
     ## Call:
-    ## glm(formula = GRADE ~ OBS + GPA + TUCE + PSI, family = binomial("probit"), 
+    ## glm(formula = GRADE ~ GPA + TUCE + PSI, family = binomial("probit"), 
     ##     data = grade)
     ## 
     ## Deviance Residuals: 
     ##     Min       1Q   Median       3Q      Max  
-    ## -1.9061  -0.4839  -0.1582   0.5326   1.8159  
+    ## -1.9392  -0.6508  -0.2229   0.5934   2.0451  
     ## 
     ## Coefficients:
     ##             Estimate Std. Error z value Pr(>|z|)   
-    ## (Intercept) -8.67376    3.11103  -2.788   0.0053 **
-    ## OBS          0.06358    0.07090   0.897   0.3698   
-    ## GPA          1.78225    0.75500   2.361   0.0182 * 
-    ## TUCE         0.05228    0.08511   0.614   0.5390   
-    ## PSI          0.51668    1.13621   0.455   0.6493   
+    ## (Intercept) -7.45231    2.57152  -2.898  0.00376 **
+    ## GPA          1.62581    0.68973   2.357  0.01841 * 
+    ## TUCE         0.05173    0.08119   0.637  0.52406   
+    ## PSI          1.42633    0.58695   2.430  0.01510 * 
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
     ## (Dispersion parameter for binomial family taken to be 1)
     ## 
     ##     Null deviance: 41.183  on 31  degrees of freedom
-    ## Residual deviance: 24.789  on 27  degrees of freedom
-    ## AIC: 34.789
+    ## Residual deviance: 25.638  on 28  degrees of freedom
+    ## AIC: 33.638
     ## 
-    ## Number of Fisher Scoring iterations: 7
+    ## Number of Fisher Scoring iterations: 6
 
 -   We can see that only GPA turns out to be significant having
     significance level .05.
@@ -297,10 +290,10 @@ margins(probit_model)
 
     ## Average marginal effects
 
-    ## glm(formula = GRADE ~ OBS + GPA + TUCE + PSI, family = binomial("probit"),     data = grade)
+    ## glm(formula = GRADE ~ GPA + TUCE + PSI, family = binomial("probit"),     data = grade)
 
-    ##      OBS    GPA    TUCE    PSI
-    ##  0.01354 0.3796 0.01114 0.1101
+    ##     GPA    TUCE    PSI
+    ##  0.3608 0.01148 0.3165
 
 ### Plotting Actual vs Fitted results
 
@@ -358,8 +351,8 @@ x2 %>% filter(logit_model.accuracy == max(x2$logit_model.accuracy))
 ```
 
     ##   threshold logit_model.accuracy probit_model.accuracy lpm_model.accuracy
-    ## 1       0.4               0.8125                0.8125            0.78125
-    ## 2       0.5               0.8125                0.8125            0.81250
+    ## 1       0.4              0.84375               0.84375            0.81250
+    ## 2       0.6              0.84375               0.84375            0.84375
 
 ``` r
 ggplot(x2 , aes(x=threshold ))+geom_line(aes(y=logit_model.accuracy), color = "red",lwd= 2)+ geom_line(aes(y=probit_model.accuracy), color= "blue",lwd= 2)+ geom_line(aes(y=lpm_model.accuracy), color = "green" , lwd= 2)+ labs(title= "Threshold vs Accuracy"  )+ xlab("Threshold")+ ylab("Accuracy")+theme_minimal()
@@ -374,7 +367,7 @@ ggplot(x2 , aes(x=threshold ))+geom_line(aes(y=logit_model.accuracy), color = "r
     between than .1 to .5 with highest accuracy of .81% at threshold of
     0.4 and 0.5 .
 
-##### 3.4 Receiver Operator Curve
+##### 3.4 Receiver Operator Curve-
 
 ``` r
 plot(performance(ROCR::prediction(logit_model$fitted.values, grade$GRADE), measure = "tpr", x= "fpr"), main="ROC Curve" , col="salmon" ,print.auc=TRUE, lwd= 3)
@@ -401,19 +394,19 @@ auc3= performance(ROCR::prediction(LPM$fitted.values, grade$GRADE), measure= "au
 paste("auc for logit ,model" ,auc1@y.values[[1]])
 ```
 
-    ## [1] "auc for logit ,model 0.9004329004329"
+    ## [1] "auc for logit ,model 0.883116883116883"
 
 ``` r
 paste("auc for probit model" ,auc2@y.values[[1]])
 ```
 
-    ## [1] "auc for probit model 0.9004329004329"
+    ## [1] "auc for probit model 0.887445887445887"
 
 ``` r
 paste ("auc for lpm model" ,auc3@y.values[[1]])
 ```
 
-    ## [1] "auc for lpm model 0.896103896103896"
+    ## [1] "auc for lpm model 0.891774891774892"
 
 -   Logit and Probit model shows same Roc curve with higher AUC than LPM
     . Hence we can say that Logit and Probit model are the better fit to

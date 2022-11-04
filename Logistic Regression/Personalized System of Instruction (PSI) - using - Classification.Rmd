@@ -53,7 +53,7 @@ tail(grade)
 ## 4.1 LPM
 
 ```{r}
-LPM=lm(GRADE ~ OBS +GPA + TUCE + PSI , grade)
+LPM=lm(GRADE ~ GPA + TUCE + PSI , grade)
 summary(LPM)
 
 
@@ -65,11 +65,11 @@ summary(LPM)
 ## 4.2 Logistic Regression (Logit Function)
 
 ```{r}
-logit_model =glm(GRADE ~ OBS + GPA + TUCE + PSI, data = grade , family  = binomial("logit"))
+logit_model =glm(GRADE ~ GPA + TUCE + PSI, data = grade , family  = binomial("logit"))
 summary(logit_model)
 ```
 
--   We can see that only GPA turns out to be significant having significance level .05.
+-   We can see that only GPA and PSI turns out to be significant having significance level .05.
 
 ##### Calculating Margins
 
@@ -101,7 +101,7 @@ legend("center",c("Predicted" , "Actual") , fill = c("blue" , "red"))
 ## 4.2 Logistic Regression (probit)
 
 ```{r}
-probit_model =glm(GRADE ~ OBS + GPA + TUCE + PSI, family = binomial("probit"), 
+probit_model =glm(GRADE ~  GPA + TUCE + PSI, family = binomial("probit"), 
     data = grade)
 
 summary(probit_model)
