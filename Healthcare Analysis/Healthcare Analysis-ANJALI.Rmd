@@ -1,7 +1,7 @@
 ---
-title: "Health_care_Analysis"
+title: "Healthcare_Analysis"
 author: "Anjali Priya"
-date: "2022-11-01"
+
 output: html_document
 ---
 
@@ -44,6 +44,7 @@ library(tidyr)
 library(purrr)
 library(car)
 library(corrplot)
+library(lmtest)
 ```
 
 ## Loading Data
@@ -60,7 +61,7 @@ str(df_pima)
 dim(df_pima)
 ```
 - Pima dataset is "dataframe" type
-- dataset constitutes of 769 observations each with 9 attributes.
+- dataset constitutes of 769 observations each with 9 variables.
 - Seeing the test field has binary values "0" , "1" , hence should be converted to factor format.
 
 
@@ -74,7 +75,8 @@ tail(df_pima , 10)
 summary(df_pima)
 
 ```
-- As seen from the data glucose diastolic triceps and insulin have min value as zero which does not seem reasonable. Hence should be removed from the data.
+- As seen from the data glucose diastolic triceps and insulin have min value as zero which seems unreasonable. Hence should be considered missing and removed from the dataset.
+
 ## EDA
 ```{r}
 ##Converting zero to NA's
@@ -92,7 +94,7 @@ summary(df_pima)
 
 ```
 
-- This looks reasonable summary but we need to tackle missing values in our dataset.
+- This looks reasonable summary but we need to deal with missing values in our dataset.
 
 ```{r}
 #analyzing missing datas in dataset
@@ -100,8 +102,8 @@ summary(df_pima)
 #df_pima %>% summarise( sum(is.na == FALSE))
  sapply(df_pima[,2:6], function(x) sum(is.na(x)))
 
-##it looks like there is larger numbers of NA under triceps an insulin.
-## dropping na as we dont have any pre_ knowldge of patirents paste hence cant use substitution
+
+## dropping na's as we don't have any information of the patirents  hence cant use substitution
 
 df_pima=na.omit(df_pima)
 any(is.na(df_pima))
@@ -116,6 +118,7 @@ df_pima$test = as.factor(df_pima$test)
 
 ```
 
+- There is good amount of missing values in "insulin" and "bmi" variables
 - Converting test field from integer to factor
 
 ```{r}
@@ -129,11 +132,18 @@ summary(df_pima$test)
 ## creating the descriptive label for test variable.
 
 
-df_pima_1 = df_pima %>% mutate(test_label = if_else(test == 0 ,"negative" , "positive"))
+df_pima_1 = df_pima %>% 
+  mutate(test_label = if_else(test == 0 ,"negative" , "positive"))
+head(df_pima_1)
 
 
 summary(df_pima_1)
 ```
+
+```{r}
+ggplot(df_pima_1 , aes(test_label))+ geom_bar(fill = "cyan4")
+```
+
 
 ```{r}
 
@@ -165,8 +175,10 @@ q1=qqPlot(df_pima_1$bmi , col = "red",xlab = "theoretical quantities" ,  ylab = 
 
 
 ```
+
 - Variables "age" , "pregnant" , "insulin" and "diabetes" are left skewed hence are not normally distributed.
-- Skewness is majorly in due to outliers.
+
+- Skewness is majorly due to outliers.
 
 ```{r}
 
@@ -174,25 +186,42 @@ q1=qqPlot(df_pima_1$bmi , col = "red",xlab = "theoretical quantities" ,  ylab = 
 
 corrplot(cor(df_pima_1[,c(1:8)]), number.cex =1 , addCoef.col = "black" , type = "upper" , order = "hclust")
 ```
-- As seen correlation between "pregnant-bmi" ,"pregnant-age" and "glucose-insulin" is the highly positive compared to the other correlation.
-- Correlation between all the variables positive except for "pregnant-bmi" and "diabetes-diastolic".
 
-## Ols_Linear Regression
+- As seen correlation between "pregnant-bmi" ,"pregnant-age" and "glucose-insulin" is the highly positive compared to the other correlation.
+
+- Correlation between all the variables are positive except for "pregnant-bmi" and "diabetes-diastolic".
+
+## Ols_Miltiple Linear Regression
 ```{r}
 
 lm_model = lm(diastolic ~ bmi + age , data = df_pima_1 )
+lm1=ggplot(df_pima_1 , aes( bmi , diastolic)) + geom_point()+geom_smooth(method ="lm" , se= FALSE)
+lm2=ggplot(df_pima_1 , aes( age , diastolic)) + geom_point()+geom_smooth(method ="lm" , se= FALSE)
+plot_grid(lm1 , lm2 )
 
-ggplot(df_pima_1 , aes(bmi , diastolic , colour=age) )+geom_point()+geom_smooth(method = "lm" , se =TRUE , colour ="red")
-sum_lm.model =summary(lm_model)
+
+sum_lm.model=summary(lm_model)
 sum_lm.model
+
+```
+- As seen that variables are highly significant. But with poor Rsq and Residual Standard error.This is also clearly visible from scatter plot how points are sparsely distributed.
+
+```{r}
+#names(summary(lm_model))
+coef_lm.model = summary(lm_model)$coefficients
+coef_lm.model
 ```
 
 
 ```{r}
-names(summary(lm_model))
-coef_lm.model = summary(lm_model)$coefficients
-coef_lm.model
+slope_age=coef_lm.model[3,1]
+se_age = coef_lm.model[3,2]
+
+
+slope_bmi = coef_lm.model[2,1]
+se_bmi = coef_lm.model[2,2]
 ```
+
 
 
 ```{r}
@@ -209,22 +238,35 @@ F_value
 
 
 ```{r}
+conf_int_agelower = slope_age - (qt(0.975 , sum_lm.model$df[2]) * se_age)
+conf_int_ageupper = slope_age + (qt(0.975 , sum_lm.model$df[2]) * se_age)
+paste0( "We are 95% confident that the age will be between", round(conf_int_agelower, 3) , "-" ,round(conf_int_ageupper , 3))
+
+
+
+conf_int_bmilower = slope_bmi - (qt(0.975 , sum_lm.model$df[2]) * se_bmi)
+conf_int_bmiupper = slope_bmi + (qt(0.975 , sum_lm.model$df[2]) * se_bmi)
+
+paste0( "We are 95% confident that the bmi will be between", round(conf_int_bmilower, 3) ,"-" ,round(conf_int_bmiupper , 3))
+
+#confint(lm_model ,level = 0.95)
+
 conf_int = conf_interval=predict(lm_model , df_pima_1 , interval ="confidence")
 head(conf_int,10)
 ```
 
-###Diagnostic plots
+### Diagnostic plots
 ```{r}
 plot(lm_model)
 
 ```
-- Residual vs Fitted value has uniform spread and the red lines is deviates a little at ends but overall its more or less is  perfect straight across plot .Hence we can declare that the residual follow linear pattern.
+- Residual vs Fitted value has uniform spread and the red lines is deviates a little at ends but overall its more or less is  perfect straight across plot .Hence we can declare that the residuals follow linear pattern.
 
-- We can see that in QQplot the points fall roughly along the straight line , Hence points are normally distributed
+- We can see that in QQplot the points fall roughly along the straight line for middle 95% of the range, Hence residuals is normal between this specific range while deviates at the ends 
 
 - Residual vs Fitted value has uniform spread and the red lines is almost straight across plot .Hence we can declare that the assumption of equal variance in not violated hence the model ids homoscedastic.
 
-- In Residual vs Leverage we can see that observation 196 i s on cooks line but doesnot cross it .This means there is no potential influencers.
+- In Residual vs Leverage we can see that none of the observation crosses cooks line  .This means there is no potential influencers.
 
 
 ### Staistical test
@@ -253,8 +295,20 @@ acf(residuals_mod1 , type ="correlation")
 library(lmtest)
 lmtest::dwtest(lm_model)
 
+
+
 ```
-- *As the DW value is 1.91 which lies in the range of 1.5 to 2.5 hence there is no autocorrelation between the residuals* 
+- *As the DW value is 2.07 which lies in the range of 1.5 to 2.5 hence there is no autocorrelation between the residuals* 
+
+- **Perform the Breusch-Godfrey Test to Check Autocorrelation**
+    + H0 : Autocorrelation do not exists between the independent variable
+    + H1 : Autocorrelation  exists between the independent variable
+    
+
+```{r}
+lmtest::bgtest(lm_model)
+```
+- Since this p-value is greater than 0.05, we fail to reject the null hypothesis and conclude that autocorrelation do not exists among the residuals at some order less than or equal to 3.
 
 
 **Testing Heteroskedacity**
@@ -264,6 +318,9 @@ lmtest::dwtest(lm_model)
     + H1 : Residuals are distributes with non equal variance(i.e heteroscedastic)
     
 ```{r}
-lmtest::bgtest(lm_model)
+lmtest::bptest(lm_model)
 ```
-    
+  - We can see that there p_value is less than equal to 0.05 , which confirms that we fail to reject the null and can say that the model is homoscedastic.
+  
+
+  
