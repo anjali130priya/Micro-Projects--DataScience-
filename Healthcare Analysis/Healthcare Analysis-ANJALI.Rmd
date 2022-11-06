@@ -1,0 +1,269 @@
+---
+title: "Health_care_Analysis"
+author: "Anjali Priya"
+date: "2022-11-01"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+
+![Copyright: Copyright (c) 2017 janews/Shutterstock. ](C:\personal files\data analytics\docs\micro git proj\Micro-Projects--DataScience-Multiple linear regression\Healthcare Analysis\Healthcare Analysis\health.jpg)
+
+
+
+# INTRODUCTION
+
+The number of adults with hypertension increased from 594 million in 1975 to 1.13 billion in 2015, and the number of people with diabetes rose from 108 million in 1980 to 422 million in 2014. Prevalence has been rising more rapidly in low- and middle-income countries than in high- income countries. Considering these statistics, the study is being conducted on 768 adult female Pima Indians living near Phoenix by the National Institute of Diabetes and Digestive & Kidney Diseases. This is done in order to target for prevention, screening, and treatment services.
+
+
+## Variables
+- pregnant: Number of times pregnant,
+- glucose: Plasma glucose concentration 2 hours in an oral glucose tolerance test,
+- diastolic: Diastolic blood pressure (mm Hg),
+- triceps: Triceps skin fold thickness (mm),
+- insulin: 2-Hour serum insulin (mu U/ml), bmi: Body mass index (weight in kg/ (height in m2)),
+- diabetes: Diabetes pedigree function,
+- age: Age (years),
+- test: a test whether the patient shows signs of diabetes (coded 0 if negative, 1 if positive)
+
+
+## Installing Package
+```{r}
+#install.packages("faraway")
+library(faraway)
+library(dplyr)
+library(ggplot2)
+library(cowplot)
+library(corrplot)
+library(tidyr)
+library(purrr)
+library(car)
+library(corrplot)
+```
+
+## Loading Data
+```{r}
+df_pima= pima
+View(df_pima)
+```
+
+## Inspectting the data
+
+```{r}
+class(df_pima)
+str(df_pima)
+dim(df_pima)
+```
+- Pima dataset is "dataframe" type
+- dataset constitutes of 769 observations each with 9 attributes.
+- Seeing the test field has binary values "0" , "1" , hence should be converted to factor format.
+
+
+```{r}
+head(df_pima , 10)
+tail(df_pima , 10)
+```
+
+
+```{r}
+summary(df_pima)
+
+```
+- As seen from the data glucose diastolic triceps and insulin have min value as zero which does not seem reasonable. Hence should be removed from the data.
+## EDA
+```{r}
+##Converting zero to NA's
+df_pima=df_pima %>% arrange(glucose) %>%  mutate(glucose = if_else(glucose == 0 , NA_integer_ ,glucose ) , 
+                                       diastolic = if_else(diastolic == 0 , NA_integer_ ,diastolic  ),
+                                       triceps = if_else(triceps == 0 , NA_integer_ ,triceps),
+                                       insulin = if_else(insulin == 0 , NA_integer_ ,insulin),
+                                       bmi = if_else(bmi == 0.0 , NA_real_ ,bmi))
+summary(df_pima)
+
+
+                                       
+
+
+
+```
+
+- This looks reasonable summary but we need to tackle missing values in our dataset.
+
+```{r}
+#analyzing missing datas in dataset
+
+#df_pima %>% summarise( sum(is.na == FALSE))
+ sapply(df_pima[,2:6], function(x) sum(is.na(x)))
+
+##it looks like there is larger numbers of NA under triceps an insulin.
+## dropping na as we dont have any pre_ knowldge of patirents paste hence cant use substitution
+
+df_pima=na.omit(df_pima)
+any(is.na(df_pima))
+
+
+
+df_pima$test = as.factor(df_pima$test)
+
+
+
+
+
+```
+
+- Converting test field from integer to factor
+
+```{r}
+df_pima$test = as.factor(df_pima$test)
+summary(df_pima$test)
+```
+
+
+```{r}
+
+## creating the descriptive label for test variable.
+
+
+df_pima_1 = df_pima %>% mutate(test_label = if_else(test == 0 ,"negative" , "positive"))
+
+
+summary(df_pima_1)
+```
+
+```{r}
+
+df_pima_1 %>%
+  keep(is.numeric) %>% 
+  gather() %>%
+ 
+  ggplot( aes(value))+
+  facet_wrap(~ key, scales = "free") +
+  geom_histogram(aes(y = ..density..),bins=20, alpha=.6 )+
+  labs(title = "Distribution plot", subtitle = "Analysing Distribution pattern of data across each variables") +
+  geom_density(col="cyan4")+
+  theme_minimal()
+
+##check for noramlity
+par(mfrow=c(2,4))
+ q1=qqPlot(df_pima_1$age ,col = "red", xlab = "theoretical quantities" ,  ylab = "sample quantities" , main = "age")
+q1=qqPlot(df_pima_1$bmi , col = "red",xlab = "theoretical quantities" ,  ylab = "sample quantities" , main = "bmi")
+ q1=qqPlot(df_pima_1$diabetes ,col = "red", xlab = "theoretical quantities" ,  ylab = "sample quantities" , main = "diabetes")
+ q1=qqPlot(df_pima_1$diastolic ,col = "red", xlab = "theoretical quantities" ,  ylab = "sample quantities" , main = "diastolic")
+  q1=qqPlot(df_pima_1$glucose ,col = "red", xlab = "theoretical quantities" ,  ylab = "sample quantities" , main = "glucose")
+ q1=qqPlot(df_pima_1$insulin ,col = "red", xlab = "theoretical quantities" ,  ylab = "sample quantities" , main = "insulin")
+ q1=qqPlot(df_pima_1$triceps ,col = "red", xlab = "theoretical quantities" ,  ylab = "sample quantities" , main = "triceps")
+ q1=qqPlot(df_pima_1$pregnant ,col = "red", xlab = "theoretical quantities" ,  ylab = "sample quantities" , main = "pregnant")
+ 
+ 
+ 
+
+
+
+```
+- Variables "age" , "pregnant" , "insulin" and "diabetes" are left skewed hence are not normally distributed.
+- Skewness is majorly in due to outliers.
+
+```{r}
+
+
+
+corrplot(cor(df_pima_1[,c(1:8)]), number.cex =1 , addCoef.col = "black" , type = "upper" , order = "hclust")
+```
+- As seen correlation between "pregnant-bmi" ,"pregnant-age" and "glucose-insulin" is the highly positive compared to the other correlation.
+- Correlation between all the variables positive except for "pregnant-bmi" and "diabetes-diastolic".
+
+## Ols_Linear Regression
+```{r}
+
+lm_model = lm(diastolic ~ bmi + age , data = df_pima_1 )
+
+ggplot(df_pima_1 , aes(bmi , diastolic , colour=age) )+geom_point()+geom_smooth(method = "lm" , se =TRUE , colour ="red")
+sum_lm.model =summary(lm_model)
+sum_lm.model
+```
+
+
+```{r}
+names(summary(lm_model))
+coef_lm.model = summary(lm_model)$coefficients
+coef_lm.model
+```
+
+
+```{r}
+names(lm_model)
+RSE = summary(lm_model)$sigma
+RSE
+R_sqrd=summary(lm_model)$r.squared
+R_sqrd
+AdjR_sqrd=summary(lm_model)$adj.r.squared
+AdjR_sqrd
+F_value=summary(lm_model)$fstatistic
+F_value
+```
+
+
+```{r}
+conf_int = conf_interval=predict(lm_model , df_pima_1 , interval ="confidence")
+head(conf_int,10)
+```
+
+###Diagnostic plots
+```{r}
+plot(lm_model)
+
+```
+- Residual vs Fitted value has uniform spread and the red lines is deviates a little at ends but overall its more or less is  perfect straight across plot .Hence we can declare that the residual follow linear pattern.
+
+- We can see that in QQplot the points fall roughly along the straight line , Hence points are normally distributed
+
+- Residual vs Fitted value has uniform spread and the red lines is almost straight across plot .Hence we can declare that the assumption of equal variance in not violated hence the model ids homoscedastic.
+
+- In Residual vs Leverage we can see that observation 196 i s on cooks line but doesnot cross it .This means there is no potential influencers.
+
+
+### Staistical test
+
+- **Test for Autocorrelation with the ACF Plot**
+```{r}
+
+
+residuals_mod1 =lm_model$residuals
+acf(residuals_mod1 , type ="correlation")
+
+```
+
+
+
+*After the lag-0 correlation, the subsequent correlations drop quickly to zero and stay (mostly) between the limits of the significance level (dashed blue lines). Therefore, we can conclude that the residuals of this model meet the assumption of no autocorrelation.*
+
+
+- **Durbin-Watson Test to Check Autocorrelation**
+    + H0 : First order autocorrelation do not exist
+    + H1 : First order autocorrelation exist
+```{r}
+
+#Durbin-Watson Test to Check Autocorrelation
+
+library(lmtest)
+lmtest::dwtest(lm_model)
+
+```
+- *As the DW value is 1.91 which lies in the range of 1.5 to 2.5 hence there is no autocorrelation between the residuals* 
+
+
+**Testing Heteroskedacity**
+
+- **Perform the Breusch–Pagan Test to Check Heteroscedasticity**
+    + H0 : Residuals are distributed with equal variance(i.e homoscedastic)
+    + H1 : Residuals are distributes with non equal variance(i.e heteroscedastic)
+    
+```{r}
+lmtest::bgtest(lm_model)
+```
+    
